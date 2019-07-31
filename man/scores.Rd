@@ -5,7 +5,7 @@
 hello()
 }
 \description{
-Prints 'Hello, world!'.
+Scalar associated with functional principal components
 }
 \examples{
 hello()
