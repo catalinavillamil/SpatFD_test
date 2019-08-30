@@ -68,8 +68,10 @@ varfcok=function(X,modelo,s0){
 
      }
      variogmatrix22=list()
+    
      for(i in 1:length(sq22)){
           variogmatrix22[[i]]=variogramLine(modelo[[sq22[i]]],dist_vector =  diff22)
+          
      }
      variogmatrix12=list()
      v2=list()
@@ -77,6 +79,7 @@ varfcok=function(X,modelo,s0){
           variogmatrix12[[i]]=variogramLine(modelo[[sq12[i]]],dist_vector =  diff12)
           v2[[i]]=variogramLine(modelo[[sq12[i]]],dist_vector =  diff2s0)
      }
+     
      sigma11=variogmatrix11[[1]]-variogmatrix11[[1]]
      c1=v1[[1]]-v1[[1]]
      for(i in 1:length(sq11)){
@@ -89,8 +92,8 @@ varfcok=function(X,modelo,s0){
           sigma22=sigma22+variogmatrix22[[i]]
      }
 
-     diag(sigma11)=sum(X[[1]]$fpca$varprop)
-     diag(sigma22)=sum(X[[2]]$fpca$varprop)
+     diag(sigma11)=sum(X[[1]]$fpca$values)
+     diag(sigma22)=sum(X[[2]]$fpca$values)
 
 
 
@@ -114,6 +117,9 @@ varfcok=function(X,modelo,s0){
 
      C=rbind(c1,c2)
      L=solve(sigma, C)
+     varianza=sigma11[1,1]-L%*%C
+     
+     return(varianza)
 
 
 }

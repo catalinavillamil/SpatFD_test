@@ -1,5 +1,5 @@
-\name{SpatFD}
-\alias{SpatFD}
+\name{is.SpatFD}
+\alias{is.SpatFD}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Create an object SpatFD
      %%  ~~function to do ... ~~
@@ -8,10 +8,7 @@
      %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-     SpatFD(X,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,vp=NULL,add=NULL,...)
-     SpatFD(X, coords, lambda=0,  nharm=NULL, add=NULL,...)
-     SpatFD(X, coords, lambda=0,  vp=NULL, add=NULL,...)
-     SpatFD(X, coords, lambda=0, add=NULL,...)
+     is.SpatFD(X)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

@@ -80,8 +80,8 @@ varfcok=function(X,modelo){
           sigma22=sigma22+variogmatrix22[[i]]
      }
 
-     diag(sigma11)=sum(X[[1]]$fpca$varprop)
-     diag(sigma22)=sum(X[[2]]$fpca$varprop)
+     diag(sigma11)=sum(X[[1]]$fpca$values)
+     diag(sigma22)=sum(X[[2]]$fpca$values)
 
 
 

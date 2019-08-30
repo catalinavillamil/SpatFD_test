@@ -1,8 +1,8 @@
-\name{hello}
-\alias{hello}
-\title{Hello, World!}
+\name{scores}
+\alias{scores}
+\title{scores}
 \usage{
-hello()
+scores(X)
 }
 \description{
 Scalar associated with functional principal components   that are a scalar spatial random field
