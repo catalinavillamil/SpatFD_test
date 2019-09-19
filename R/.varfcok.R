@@ -1,11 +1,11 @@
-varfcok=function(X,modelo,s0){
+.varfcok=function(X,modelo,fixcoords,movcoords,s0){
 
-     n1=nrow(X[[1]]$coords)
+     n1=nrow(fixcoords)+nrow(movcoords)
      n2=nrow(X[[2]]$coords)
      h1=length(X[[1]]$fpca$harmonics$fdnames[[2]])
      h2=length(X[[2]]$fpca$harmonics$fdnames[[2]])
      #coordenadas1=fixcoord
-     coordstot=rbind(X[[1]]$coords,X[[2]]$coords,s0)
+     coordstot=rbind(fixcoords,movcoords,X[[2]]$coords,s0)
      colnames(coordstot)=c("X","Y")
      #coordenadas2=data.frame("X"=coordmov[1:n2],"Y"=coordmov[(n2+1):N2])#ubicar coordenadas
      #coordenadas=rbind(coordenadas1,coordenadas2)
@@ -117,7 +117,7 @@ varfcok=function(X,modelo,s0){
 
      C=rbind(c1,c2)
      L=solve(sigma, C)
-     varianza=sigma11[1,1]-L%*%C
+     varianza=sigma11[1,1]-t(L)%*%C
      
      return(varianza)
 

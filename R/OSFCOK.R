@@ -1,5 +1,5 @@
-OSFCOK=function(X,modelo, S,...){
+OSFCOK=function(X,modelo,fixcoords,movcoords, S,...){
         
-       return(optim(S,.sumvar,method="SANN",X=X,modelo=modelo,control = list(...)))
+       return(optim(movcoords,.sumvar,method="SANN",X=X,modelo=modelo,fixcoords=fixcoords,S=S,control = list(...)))
         
 }
