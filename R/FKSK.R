@@ -1,9 +1,9 @@
-FKSK=function(X, newcoords,model,j=1,fill.all=T){
+FKSK=function(SFD, newcoords,model,j=1,fill.all=T){
 
-     puntaje=X[[j]]$fpca$scores
-     rownames(puntaje)=X[[j]]$cn
+     puntaje=SFD[[j]]$fpca$scores
+     rownames(puntaje)=SFD[[j]]$cn
      puntajes=as.data.frame(puntaje)
-     coordinates(puntajes)=X[[j]]$coords
+     coordinates(puntajes)=SFD[[j]]$coords
      if(fill.all==T){
           v=list()
           fv=list()
@@ -49,12 +49,12 @@ FKSK=function(X, newcoords,model,j=1,fill.all=T){
 
      # plot(x=c(0,1000),y=c(-50,140))
      # for (i in 1:nrow(pred)){
-     #       lines(X[[j]][["fpca"]][["meanfd"]]+sum((pred[i,]*X[[j]][["fpca"]][["harmonics"]])),col=i)
+     #       lines(SFD[[j]][["fpca"]][["meanfd"]]+sum((pred[i,]*SFD[[j]][["fpca"]][["harmonics"]])),col=i)
      # }
 
      fpred=list()
      for( i in 1:nrow(pred)){
-          fpred[[i]]=X[[j]][["fpca"]][["meanfd"]]+sum((pred[i,]*X[[j]][["fpca"]][["harmonics"]]))
+          fpred[[i]]=SFD[[j]][["fpca"]][["meanfd"]]+sum((pred[i,]*SFD[[j]][["fpca"]][["harmonics"]]))
      }
      vari=K[[1]]$var1.var
      if(ncol(puntajes)>1){
@@ -64,16 +64,16 @@ FKSK=function(X, newcoords,model,j=1,fill.all=T){
      }
      # plot(x=c(0,1000),y=c(-5000,80000))
      # for (i in 1:nrow(vari)){
-     #       lines(X[[j]][["fpca"]][["meanfd"]]+sum((vari[i,]*X[[j]][["fpca"]][["harmonics"]])),col=i)
+     #       lines(SFD[[j]][["fpca"]][["meanfd"]]+sum((vari[i,]*SFD[[j]][["fpca"]][["harmonics"]])),col=i)
      # }
 
 
      fvari=list()
      for( i in 1:nrow(vari)){
-          fvari[[i]]=X[[j]][["fpca"]][["meanfd"]]+sum((vari[i,]*X[[j]][["fpca"]][["harmonics"]]))
+          fvari[[i]]=SFD[[j]][["fpca"]][["meanfd"]]+sum((vari[i,]*SFD[[j]][["fpca"]][["harmonics"]]))
      }
 
-     ret=list(X=X,model=fv,fpred=fpred,fvar=fvari)# hacer cv o no? agregar krigin(K) o no?
+     ret=list(SFD=SFD,model=fv,fpred=fpred,fvar=fvari)# hacer cv o no? agregar krigin(K) o no?
      class(ret)='FKSK'
      return(ret)
 
