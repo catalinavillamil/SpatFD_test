@@ -12,6 +12,7 @@ library(fda)
 library(gstat)
 library(sp)
 library(gridExtra)
+library(GenSA)
 
 #------------------------------------------------------------------------
 #            PAQUETES NECESARIOS (Paquete)
@@ -101,3 +102,6 @@ fixcoords=coordenadas
 movcoords=newcoords[c(1,33,40),]
 modelo= cok$model$model
 .varfcok(X,modelo,fixcoords,movcoords,COS[1,])
+xbound=c(min(coordenadas[,1]),max(coordenadas[,1]))
+ybound=c(min(coordenadas[,2]),max(coordenadas[,2]))
+OSFCOK(X,modelo,fixcoords,movcoords,COS,xbound,ybound)
