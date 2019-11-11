@@ -1,21 +1,25 @@
 \name{SpatFD}
 \alias{SpatFD}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{Create an object SpatFD
+\title{SpatFD
      %%  ~~function to do ... ~~
 }
-\description{ Function that creates SpatFD objects; objects that hold all the information necessary for univariate or multivariate geostatistical prediction for functional data.
+\description{ \code{SpatFD} Function that creates SpatFD objects; objects that hold all the information necessary for univariate or multivariate geostatistical prediction for functional data.
+
+\code{is.SpatFD} tests if its argument is an object SPATFD
      %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-     SpatFD(X,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,vp=NULL,add=NULL,...)
-     SpatFD(X, coords, lambda=0,  nharm=NULL, add=NULL,...)
-     SpatFD(X, coords, lambda=0,  vp=NULL, add=NULL,...)
-     SpatFD(X, coords, lambda=0, add=NULL,...)
+     SpatFD(data,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,vp=NULL,add=NULL,...)
+     SpatFD(data, coords, lambda=0,  nharm=NULL, add=NULL,...)
+     SpatFD(data, coords, lambda=0,  vp=NULL, add=NULL,...)
+     SpatFD(data, coords, lambda=0, add=NULL,...)
+     
+     is.SpatFD(x)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-     \item{X}{ Is a matrix, data frame or fdata with the observed data
+     \item{data}{ Is a matrix, data frame or fdata with the observed data
           %%     ~~Describe \code{x} here~~
      }
      \item{coords}{A data frame or a matrix with two columns indicating X and Y coordinates}
@@ -25,14 +29,16 @@
      \item{nharm}{The number of harmonics or principal components to compute.}
      \item{vp}{The percentage of variance to calculate the number of harmonics or principal components to compute.}
      \item{add}{An object of class SpatFD to be added.}
+     \item{x}{An \R object}
      \item{...}{Arguments to be passed to the basis function creation (see create.bsplines.basis or create.fourier.basis).}
 }
-%\details{
+\details{
+\code{is.SpatFD} returns \code{TRUE} if \code{x} is an object of class \code{SpatFD} and \code{FALSE} otherwise.
      %%  ~~ If necessary, more details than the description above ~~
-          %}
+         }
 \value{
      An object of class SpatFD, which inherits from list. Its components are:
-          \item{X}{An object of class SpatFD, where is specified the original data, the functional data and the components of the FPCA}
+          \item{SFD}{An object of class SpatFD, where is specified the original data, the functional data and the components of the FPCA}
      %%  ~Describe the value returned
      %%  If it is a LIST, use
      %%  \item{comp1 }{Description of 'comp1'}

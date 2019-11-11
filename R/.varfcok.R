@@ -1,12 +1,12 @@
-.varfcok=function(X,modelo,fixcoords,movcoords,s0){
+.varfcok=function(SFD,modelo,fixcoords,movcoords,s0){
 
      n1=nrow(fixcoords)+nrow(movcoords)
-     n2=nrow(X[[2]]$coords)
-     h1=length(X[[1]]$fpca$harmonics$fdnames[[2]])
-     h2=length(X[[2]]$fpca$harmonics$fdnames[[2]])
+     n2=nrow(SFD[[2]]$coords)
+     h1=length(SFD[[1]]$fpca$harmonics$fdnames[[2]])
+     h2=length(SFD[[2]]$fpca$harmonics$fdnames[[2]])
      #coordenadas1=fixcoord
      colnames(movcoords)=c("X","Y")
-     coordstot=rbind(fixcoords,movcoords,X[[2]]$coords,s0)
+     coordstot=rbind(fixcoords,movcoords,SFD[[2]]$coords,s0)
      colnames(coordstot)=c("X","Y")
      #coordenadas2=data.frame("X"=coordmov[1:n2],"Y"=coordmov[(n2+1):N2])#ubicar coordenadas
      #coordenadas=rbind(coordenadas1,coordenadas2)
@@ -93,13 +93,13 @@
           sigma22=sigma22+variogmatrix22[[i]]
      }
 
-     diag(sigma11)=sum(X[[1]]$fpca$values)
-     diag(sigma22)=sum(X[[2]]$fpca$values)
+     diag(sigma11)=sum(SFD[[1]]$fpca$values)
+     diag(sigma22)=sum(SFD[[2]]$fpca$values)
 
 
 
-     fd1=eval.fd(1:nrow(X[[1]]$X),X[[1]][["fpca"]][["harmonics"]])
-     fd2=eval.fd(1:nrow(X[[2]]$X),X[[2]][["fpca"]][["harmonics"]])
+     fd1=eval.fd(1:nrow(SFD[[1]]$data),SFD[[1]][["fpca"]][["harmonics"]])
+     fd2=eval.fd(1:nrow(SFD[[2]]$data),SFD[[2]][["fpca"]][["harmonics"]])
      comb=cbind(rep(1:h1,rep(h2,h1)),1:h2)
      c=c()
 

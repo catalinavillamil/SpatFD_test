@@ -8,16 +8,15 @@
      %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-     FCOK(X, newcoords, model, j=1, fill.all=T, ...)
+     FCOK(SFD,newcoords,model,j=1,fill.all=T)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-     \item{X}{is an object of class SpatFD.}
+     \item{SFD}{is an object of class SpatFD.}
      \item{newcoords}{A data fame with two columns indicating X and Y coordinates.}
      \item{model}{an object of class vgm.}
      \item{j}{a numeric value to specifying the position of the variable or a character value specifying the name of the variable. 1 by default.}
      \item{fill.all}{A boolean value to fit the same model to all scores. TRUE by default.}
-     \item{...}{Arguments to be passed to fit.lmc.}
      %%     ~~Describe \code{x} here~~
 }
 
@@ -25,8 +24,8 @@
      %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-     An object of class FKCK, which inherits from list. Its components are:
-          \item{X}{the object of class FKCK where are specified the functional predictions.}
+     An object of class FCOK, which inherits from list. Its components are:
+          \item{X}{the object of class FCOK where are specified the functional predictions.}
      %%  ~Describe the value returned
      %%  If it is a LIST, use
      %%  \item{comp1 }{Description of 'comp1'}
@@ -36,7 +35,7 @@
 \references{
      %% ~put references to the literature/web site here ~
 }
-\author{
+\author{ Angie Villamil, Martha Bohorquez
      %%  ~~who you are~~
 }
 \note{

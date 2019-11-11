@@ -13,6 +13,7 @@ library(gstat)
 library(sp)
 library(gridExtra)
 library(GenSA)
+library(gtools)
 
 #------------------------------------------------------------------------
 #            PAQUETES NECESARIOS (Paquete)
@@ -89,19 +90,25 @@ ds=SpatFD(MNO217,coordenadas2,nbasis = 60,lambda = 0.01,nharm=2,add=ds)
 model=vgm(1000,'Gau',10000)
 #model=vgm(1,'Exp',20000)
 
-X=ds
+SFD=ds
 newcoords=datos[,1:2]
 
 fk=FKSK(ds,newcoords,model)
 fc=FKCK(ds,newcoords,model)
 cok=FCOK(ds,newcoords,model)
 
-COS=data.frame(c(487382,491853),c(2135184,2139368))
-colnames(COS)=c("X","Y")
+S=data.frame(c(487382,491853),c(2135184,2139368))
+colnames(S)=c("X","Y")
 fixcoords=coordenadas
 movcoords=newcoords[c(1,33,40),]
 modelo= cok$model$model
-.varfcok(X,modelo,fixcoords,movcoords,COS[1,])
+.varfcok(SFD,modelo,fixcoords,movcoords,S[1,])
 xbound=c(min(coordenadas[,1]),max(coordenadas[,1]))
 ybound=c(min(coordenadas[,2]),max(coordenadas[,2]))
-OSFCOK(X,modelo,fixcoords,movcoords,COS,xbound,ybound)
+
+OSFCOK(ds,modelo,fixcoords,movcoords,S,xbound,ybound)
+
+q=crossvalSFD(data=MPM1017,coords=coordenadas,basis="Bsplines",nbasis = 60,lambda=0.01,nharm=3,fn="FKSK",model=model)
+
+
+

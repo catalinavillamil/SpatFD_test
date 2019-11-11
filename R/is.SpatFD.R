@@ -1,4 +1,4 @@
-is.SpatFD=function(ob){
-     s=(class(ob)=="SpatFD")
+is.SpatFD=function(x){
+     s=(class(x)=="SpatFD")
      return(s)
 }

@@ -8,15 +8,14 @@
      %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-     FKCK(X, newcoords, model, j=1, fill.all=T,...)
+     FKCK(SFD,newcoords,model,j=1,fill.all=T)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-     \item{X}{is an object of class SpatFD.}
+     \item{SFD}{is an object of class SpatFD.}
      \item{newcoords}{A data fame with two columns indicating X and Y coordinates.}
      \item{model}{an object of class vgm.}
      \item{j}{a numeric value to specifying the position of the variable or a character value specifying the name of the variable. 1 by default.}
-     \item{...}{Arguments to be passed to fit.lmc.}
      %%     ~~Describe \code{x} here~~
 }
 
@@ -35,8 +34,7 @@
 \references{
      %% ~put references to the literature/web site here ~
 }
-\author{
-     Angie Villamil and Martha Bohorquez
+\author{ Angie Villamil, Martha Bohorquez
      %%  ~~who you are~~
 }
 \note{

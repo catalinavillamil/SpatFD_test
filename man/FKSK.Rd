@@ -8,16 +8,15 @@
      %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-     FKSK(X, newcoords,model,j=1,fill.all=T,...)
+     FKSK(SFD, newcoords,model,j=1,fill.all=T)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-     \item{X}{Is an object of class SpatFD.}
+     \item{SFD}{Is an object of class SpatFD.}
      \item{newcoords}{A data fame with two columns indicating X and Y coordinates.}
      \item{model}{An object of class vgm or a list of objects of class vgm.}
      \item{j}{A numeric value to specifying the position of the variable or a character value specifying the name of the variable. 1 by default.}
      \item{fill.all}{A boolean value to fit the same model to all scores. TRUE by default.}
-     \item{...}{ Arguments to be passed to fit.variogram.}
 }
 \details{
      %%  ~~ If necessary, more details than the description above ~~
@@ -35,8 +34,7 @@
 \references{
      %% ~put references to the literature/web site here ~
 }
-\author{
-     Angie Villamil and Martha Bohorquez
+\author{ Angie Villamil, Martha Bohorquez
      %%  ~~who you are~~
 }
 \note{

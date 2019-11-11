@@ -1,13 +1,13 @@
-SpatFD=function(X,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,vp=NULL,add=NULL,...){
+SpatFD=function(data,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,vp=NULL,add=NULL,...){
      #----------------------------------------------------------------------------
      #           VALIDANDO ARGUMENTOS *
      #----------------------------------------------------------------------------
-     #X
-     if(!(is.matrix(X) || is.array(X) || is.data.frame(X) ||is.fdSmooth(X)||is.fd(X))){
-          stop("ERROR: Wrong class of X object")
+     #data
+     if(!(is.matrix(data) || is.array(data) || is.data.frame(data) ||is.fdSmooth(data)||is.fd(data))){
+          stop("ERROR: Wrong class of data object")
      }
-     if(any(is.na(X))){
-          stop("ERROR: There is some NA value in X")
+     if(any(is.na(data))){
+          stop("ERROR: There is some NA value in data")
      }
      #coords
 
@@ -19,18 +19,18 @@ SpatFD=function(X,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,vp=NULL,a
           stop("ERROR: There is some NA value in coords")
      }
      #Coincidan tamaños
-     if(is.matrix(X)||is.data.frame(X)|| is.array(X)){
-          cx=dim(X)[2]
+     if(is.matrix(data)||is.data.frame(data)|| is.array(data)){
+          cx=dim(data)[2]
      }else if(is.fdSmooth){
-          cx=dim(X$fd$coefs)[2]
-     }else if(is.fd(X)){
-          cx=dim(X$coefs)[2]
+          cx=dim(data$fd$coefs)[2]
+     }else if(is.fd(data)){
+          cx=dim(data$coefs)[2]
      }
 
      fc=dim(coords)[1]
 
      if(cx!=fc){
-          stop("ERROR: number of columns of Xmust be equal to number of rows of coords")
+          stop("ERROR: number of columns of data must be equal to number of rows of coords")
      }
 
 
@@ -41,7 +41,7 @@ SpatFD=function(X,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,vp=NULL,a
           stop("ERROR: basis not specified")
      }
      #nbasis
-     if (!(((is.fdSmooth(X)||is.fd(X) )&&is.null(nbasis))  || (is.numeric(nbasis)&& length(nbasis)==1))){
+     if (!(((is.fdSmooth(data)||is.fd(data) )&&is.null(nbasis))  || (is.numeric(nbasis)&& length(nbasis)==1))){
           stop("ERROR: Wrong class of nbasis object")
      }
      #nharm
@@ -49,7 +49,7 @@ SpatFD=function(X,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,vp=NULL,a
           stop("ERROR: Wrong class of nharm object")
      }
      #lambda
-     if (!(((is.fdSmooth(X)||is.fd(X) )&&is.null(lambda))  || (is.numeric(lambda)&& length(lambda)==1))){
+     if (!(((is.fdSmooth(data)||is.fd(data) )&&is.null(lambda))  || (is.numeric(lambda)&& length(lambda)==1))){
           stop("ERROR: Wrong class of lambda object")
      }
      #vp
@@ -65,15 +65,15 @@ SpatFD=function(X,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,vp=NULL,a
      #----------------------------------------------------------------------------
 
 
-     if(is.matrix(X) || is.array(X) || is.data.frame(X)){
+     if(is.matrix(data) || is.array(data) || is.data.frame(data)){
 
-          MX=as.matrix(X)
-          if(!is.numeric(MX)){
-               stop("ERROR: Object X is not numeric")
+          Mdata=as.matrix(data)
+          if(!is.numeric(Mdata)){
+               stop("ERROR: Object data is not numeric")
           }
 
-          hr <- c(1,nrow(MX))
-          oplfd <- vec2Lfd(c(1,ncol(MX)), hr)
+          hr <- c(1,nrow(Mdata))
+          oplfd <- vec2Lfd(c(1,ncol(Mdata)), hr)
 
           #bases funcionales
           if(basis=="Bsplines"){
@@ -82,18 +82,18 @@ SpatFD=function(X,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,vp=NULL,a
                hourbasis <- create.fourier.basis(hr,nbasis,...)
           }
 
-          X_fdPar<-fdPar(fdobj=hourbasis,Lfdobj=oplfd,lambda)
-          X_fdSm <- smooth.basis(argvals=1:nrow(MX),MX,X_fdPar)
-          X_fd=X_fdSm$fd
-          cn=X_fd$fdnames$reps
+          data_fdPar<-fdPar(fdobj=hourbasis,Lfdobj=oplfd,lambda)
+          data_fdSm <- smooth.basis(argvals=1:nrow(Mdata),Mdata,data_fdPar)
+          data_fd=data_fdSm$fd
+          cn=data_fd$fdnames$reps
 
-     }  else if (is.fdSmooth(X)){
-          X_fdSm = X
-          X_fd=X_fdSm$fd
-          cn=X_fd$fdnames$reps
-     }  else if (is.fd(X)){
-          X_fd=X
-          cn=X_fd$fdnames$reps
+     }  else if (is.fdSmooth(data)){
+          data_fdSm = data
+          data_fd=data_fdSm$fd
+          cn=data_fd$fdnames$reps
+     }  else if (is.fd(data)){
+          data_fd=data
+          cn=data_fd$fdnames$reps
      }
 
      #----------------------------------------------------------------------------
@@ -101,33 +101,23 @@ SpatFD=function(X,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,vp=NULL,a
      #----------------------------------------------------------------------------
 
      if (!is.null(nharm)){
-          fpca=pca.fd(X_fd,nharm=nharm)
+          fpca=pca.fd(data_fd,nharm=nharm)
      }  else if(!is.null(vp)){
           nh=1
           repeat{
-               fpca=pca.fd(X_fd,nharm = nh)
+               fpca=pca.fd(data_fd,nharm = nh)
                if(! sum(fpca$varprop)<vp){ break }
                nh=nh+1
           }
      }  else if(is.null(nharm) && is.null(vp)){
-          fpca=pca.fd(X_fd)
+          fpca=pca.fd(data_fd)
      }
 
-
-     # puntaje=fpca$scores
-     # rownames(puntaje)=cn
-     # puntajes=as.data.frame(puntaje)
-     # coordinates(puntajes)=coords
-     #----------------------------------------------------------------------------
-     #           OUTPUT *
-     #   -  decidir si agregar puntajes a la lista de salida o no
-     #----------------------------------------------------------------------------
-
      if(is.null(add)){
-          s=list(list(X=X,coords=coords,coordsnames=cn,fpca=fpca))
+          s=list(list(data=data,coords=coords,coordsnames=cn,fpca=fpca))
           class(s)="SpatFD"
      }  else if (class(add)=="SpatFD"){
-          s=list(list(X=X,coords=coords,cn=cn,fpca=fpca))
+          s=list(list(data=data,coords=coords,coordsnames=cn,fpca=fpca))
           s=append(add,s)
           class(s)="SpatFD"
      }

@@ -8,13 +8,17 @@
      %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-     OSFCOK(X,modelo, S,...)
+     OSFCOK(SFD,modelo,fixcoords,movcoords, S,xbound,ybound,...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-     \item{X}{is an object of class SpatFD.}
+     \item{SFD}{is an object of class SpatFD.}
      \item{modelo}{an object of class vgm.}
-     \item{S}{Initial values for the parameters to be optimized over.}
+     \item{fixcoords}{coordinates which can not move.}
+     \item{movcoords}{Initial values for the parameters to be optimized over.}
+     \item{S}{Coordinates where is wanted more optime prediction}
+     \item{xbound}{limits in x axe.}
+     \item{ybound}{limits in y axe.}
      \item{...}{Arguments to be passed to control(read optim documentation )}
      %%     ~~Describe \code{x} here~~
 }
@@ -23,8 +27,8 @@
      %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-     An object of class FKCK, which inherits from list. Its components are:
-          \item{X}{the object of class FKCK where are specified the functional predictions.}
+     \item{newcoords}{new coordinates}
+     \item{fixcoords}{fix coordinates}
      %%  ~Describe the value returned
      %%  If it is a LIST, use
      %%  \item{comp1 }{Description of 'comp1'}
@@ -34,7 +38,7 @@
 \references{
      %% ~put references to the literature/web site here ~
 }
-\author{
+\author{ Angie Villamil, Martha Bohorquez
      %%  ~~who you are~~
 }
 \note{
