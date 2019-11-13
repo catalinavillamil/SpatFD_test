@@ -5,6 +5,7 @@
      %%  ~~function to do ... ~~
 }
 \description{
+        Functional Cokriging
      %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
@@ -20,9 +21,7 @@
      %%     ~~Describe \code{x} here~~
 }
 
-\details{
-     %%  ~~ If necessary, more details than the description above ~~
-}
+
 \value{
      An object of class FCOK, which inherits from list. Its components are:
           \item{X}{the object of class FCOK where are specified the functional predictions.}
@@ -32,19 +31,14 @@
      %%  \item{comp2 }{Description of 'comp2'}
      %% ...
 }
-\references{
-     %% ~put references to the literature/web site here ~
-}
+
 \author{ Angie Villamil, Martha Bohorquez
      %%  ~~who you are~~
-}
-\note{
-     %%  ~~further notes~~
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-     \seealso{
+     \seealso{\code{\link{FKSK}}, \code{\link{FKCK}}, \code{\link{SpatFD}}
           %% ~~objects to See Also as \code{\link{help}}, ~~~
      }
 \examples{
@@ -59,5 +53,4 @@
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{Functional Cokriging}% use one of  RShowDoc("KEYWORDS")

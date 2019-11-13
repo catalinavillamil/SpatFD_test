@@ -1,1 +1,30 @@
 exportPattern("^[^\\.]")
+
+importFrom("graphics", "plot")
+
+importFrom("stats", "predict")
+
+importFrom("sp", "coordinates<-")
+importFrom("sp", "spplot")
+importFrom("sp", "spsample")
+
+importFrom("gtools", "combinations")
+
+importFrom("gstat", "gstat")
+importFrom("gstat", "variogram")
+importFrom("gstat", "fit.variogram")
+importFrom("gstat", "fit.lmc")
+importFrom("gstat", "krige")
+
+importFrom("gridExtra", "grid.arrange")
+
+importFrom("GenSA", "GenSA")
+
+importFrom("fda", "is.fdSmooth")
+importFrom("fda", "is.fd")
+importFrom("fda", "vec2Lfd")
+importFrom("fda", "create.bspline.basis")
+importFrom("fda", "create.fourier.basis")
+importFrom("fda", "fdPar")
+importFrom("fda", "smooth.basis")
+importFrom("fda", "pca.fd")

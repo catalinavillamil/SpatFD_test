@@ -1,19 +1,15 @@
-\name{SpatFD}
-\alias{SpatFD}
+\name{crossvalSFD}
+\alias{crossvalSFD}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{Create a SpatFD object
+\title{ cross validation 
      %%  ~~function to do ... ~~
 }
-\description{  Function that creates SpatFD objects; objects that hold all the information necessary for univariate or multivariate geostatistical prediction for functional data.
-
+\description{
+        cross validation of predictions
      %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-     SpatFD(data,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,vp=NULL,add=NULL,...)
-     SpatFD(data, coords, lambda=0,  nharm=NULL, add=NULL,...)
-     SpatFD(data, coords, lambda=0,  vp=NULL, add=NULL,...)
-     SpatFD(data, coords, lambda=0, add=NULL,...)
-
+     crossvalSFD(data,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,vp=NULL,add=NULL,fn="FKSK",model,j=1,fill.all=T,...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -27,12 +23,19 @@
      \item{nharm}{The number of harmonics or principal components to compute.}
      \item{vp}{The percentage of variance to calculate the number of harmonics or principal components to compute.}
      \item{add}{An object of class SpatFD to be added.}
+     \item{fn}{method to apply for prediction. ``FKSK'', ``FKCK'' or ``FCOK''. ``FKSK'' by default.}
+     \item{model}{an object of class vgm.}
+     \item{j}{a numeric value to specifying the position of the variable or a character value specifying the name of the variable. 1 by default.}
+     \item{fill.all}{A boolean value to fit the same model to all scores. TRUE by default.}
      \item{...}{Arguments to be passed to the basis function creation (see create.bsplines.basis or create.fourier.basis).}
+     
+     %%     ~~Describe \code{x} here~~
 }
 
+
 \value{
-     An object of class SpatFD, which inherits from list. Its components are:
-          \item{SFD}{An object of class SpatFD, where is specified the original data, the functional data and the components of the FPCA}
+     \item{prediction}{Predictions.}
+     \item{data}{Real data.}
      %%  ~Describe the value returned
      %%  If it is a LIST, use
      %%  \item{comp1 }{Description of 'comp1'}
@@ -44,16 +47,17 @@
      %%  ~~who you are~~
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
-     \seealso{ \code{\link{FKSK}}, \code{\link{FKCK}}, \code{\link{FCOK}}
+%% ~Make other sections like Warning with \section{Warning }{....} ~
+     
+     \seealso{\code{\link{SpatFD}}, \code{\link{FKSK}}, \code{\link{FCOK}}, \code{\link{FKCK}}
           %% ~~objects to See Also as \code{\link{help}}, ~~~
      }
 \examples{
      ##---- Should be DIRECTLY executable !! ----
      ##-- ==>  Define data, use random,
      ##--	or do  help(data=index)  for the standard data sets.
-
+     
      ## The function is currently defined as
      function (x)
      {
@@ -61,5 +65,4 @@
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{Spatial}% use one of  RShowDoc("KEYWORDS")
-\keyword{Functional Data}% __ONLY ONE__ keyword per line
+\keyword{Cross Validation}% use one of  RShowDoc("KEYWORDS")
