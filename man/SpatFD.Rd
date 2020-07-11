@@ -10,16 +10,12 @@
 }
 \usage{
      SpatFD(data,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,vp=NULL,add=NULL,...)
-     SpatFD(data, coords, lambda=0,  nharm=NULL, add=NULL,...)
-     SpatFD(data, coords, lambda=0,  vp=NULL, add=NULL,...)
-     SpatFD(data, coords, lambda=0, add=NULL,...)
-
+     SpatFD(data, coords, nharm=NULL, add=NULL,...)
+     SpatFD(data, coords, vp=NULL, add=NULL,...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-     \item{data}{ Is a matrix, data frame or fdata with the observed data
-          %%     ~~Describe \code{x} here~~
-     }
+     \item{data}{ Is a matrix, data frame or fdata with the observed data}
      \item{coords}{A data frame or a matrix with two columns indicating X and Y coordinates}
      \item{basis}{A character specifying the basis functions, ``Bsplines'' or ``Fourier''}
      \item{nbasis}{An integer variable specifying the number of basis functions. 4 by default. }

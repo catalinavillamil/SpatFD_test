@@ -9,15 +9,15 @@
      %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-     FKSK(SFD, newcoords,model,j=1,fill.all=T)
+     FKSK(SFD, newcoords,model,j=1,fill.all=NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
      \item{SFD}{Is an object of class SpatFD.}
      \item{newcoords}{A data fame with two columns indicating X and Y coordinates.}
-     \item{model}{An object of class vgm or a list of objects of class vgm.}
+     \item{model}{An object of class variogramModel or a list of objects of class variogramModel(see vgm from gstat package).}
      \item{j}{A numeric value to specifying the position of the variable or a character value specifying the name of the variable. 1 by default.}
-     \item{fill.all}{A boolean value to fit the same model to all scores. TRUE by default.}
+     \item{fill.all}{A boolean value to fit the same model to all scores. TRUE by default. If TRUE, model must be class variogramModel. If FALSE, model must be a list of objects of class variogramModel.}
 }
 
 \value{

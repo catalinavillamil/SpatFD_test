@@ -2,21 +2,32 @@ SpatFD=function(data,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,vp=NUL
      #----------------------------------------------------------------------------
      #           VALIDANDO ARGUMENTOS *
      #----------------------------------------------------------------------------
+     #all
+        if(missing(data)){
+                stop("Missing data")
+        }
+        if (missing(coords)){
+                stop("Missing coords")
+        }
+        if(missing(nharm) && missing(vp)){
+                stop("Missing nharm or vp")
+        }
+
      #data
      if(!(is.matrix(data) || is.array(data) || is.data.frame(data) ||is.fdSmooth(data)||is.fd(data))){
-          stop("ERROR: Wrong class of data object")
+          stop("Wrong class of data object")
      }
      if(any(is.na(data))){
-          stop("ERROR: There is some NA value in data")
+          stop("There is some NA value in data")
      }
      #coords
 
      if(!(is.matrix(coords) || is.data.frame(coords))){
-          stop("ERROR: Wrong class of coords object")
+          stop("Wrong class of coords object")
      }else if(!all(apply(coords, c(1,2), is.numeric))){
-          stop("ERROR: coords must be numeric data")
+          stop("Coords must be numeric data")
      }else if(any(is.na(coords))){
-          stop("ERROR: There is some NA value in coords")
+          stop("There is some NA value in coords")
      }
      #Coincidan tamaños
      if(is.matrix(data)||is.data.frame(data)|| is.array(data)){
@@ -30,35 +41,35 @@ SpatFD=function(data,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,vp=NUL
      fc=dim(coords)[1]
 
      if(cx!=fc){
-          stop("ERROR: number of columns of data must be equal to number of rows of coords")
+          stop("Number of columns of data must be equal to number of rows of coords")
      }
 
 
      #basis
      if (!(is.character(basis)&& length(basis)==1)){
-          stop("ERROR: Wrong class of basis object")
+          stop("Wrong class of basis object")
      } else if (!(basis=="Fourier" || basis =="Bsplines")){
-          stop("ERROR: basis not specified")
+          stop("basis not specified")
      }
      #nbasis
      if (!(((is.fdSmooth(data)||is.fd(data) )&&is.null(nbasis))  || (is.numeric(nbasis)&& length(nbasis)==1))){
-          stop("ERROR: Wrong class of nbasis object")
+          stop("Wrong class of nbasis object")
      }
      #nharm
      if (!(is.null(nharm)  || (is.numeric(nharm)&& length(nharm)==1))){
-          stop("ERROR: Wrong class of nharm object")
+          stop("Wrong class of nharm object")
      }
      #lambda
      if (!(((is.fdSmooth(data)||is.fd(data) )&&is.null(lambda))  || (is.numeric(lambda)&& length(lambda)==1))){
-          stop("ERROR: Wrong class of lambda object")
+          stop("Wrong class of lambda object")
      }
      #vp
      if (!( is.null(vp)  || (is.numeric(vp)&& length(vp)==1))){
-          stop("ERROR: Wrong class of vp object")
+          stop("Wrong class of vp object")
      }
      #add
-     if(!(is.null(add) || is.SpatFD(add))){
-          stop("ERROR: Wrong class of add object")
+     if(!(is.null(add) || inherits(add,"SpatFD"))){
+          stop("Wrong class of add object")
      }
      #----------------------------------------------------------------------------
      #           DEJANDO LISTO PARA FPCA
@@ -66,10 +77,18 @@ SpatFD=function(data,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,vp=NUL
 
 
      if(is.matrix(data) || is.array(data) || is.data.frame(data)){
-
+          if(missing(basis)){
+                        message("Using Bsplines basis by default")
+                }
+          if(missing(nbasis)){
+                        message("Using 4 basis by default")
+                }
+          if(missing(lambda)){
+                        message("Using lambda = 0 by default")
+                }
           Mdata=as.matrix(data)
           if(!is.numeric(Mdata)){
-               stop("ERROR: Object data is not numeric")
+               stop("Object data is not numeric")
           }
 
           hr <- c(1,nrow(Mdata))
@@ -116,7 +135,7 @@ SpatFD=function(data,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,vp=NUL
      if(is.null(add)){
           s=list(list(data=data,coords=coords,coordsnames=cn,fpca=fpca))
           class(s)="SpatFD"
-     }  else if (class(add)=="SpatFD"){
+     }  else if (inherits(add,"SpatFD")){
           s=list(list(data=data,coords=coords,coordsnames=cn,fpca=fpca))
           s=append(add,s)
           class(s)="SpatFD"
