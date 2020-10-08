@@ -1,4 +1,4 @@
-SpatFD=function(data,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,vp=NULL,add=NULL,...){
+SpatFD=function(data,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,vp=NULL,name=NULL,add=NULL,...){
      #----------------------------------------------------------------------------
      #           VALIDANDO ARGUMENTOS *
      #----------------------------------------------------------------------------
@@ -43,7 +43,11 @@ SpatFD=function(data,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,vp=NUL
      if(cx!=fc){
           stop("Number of columns of data must be equal to number of rows of coords")
      }
-
+     
+     # basis and nharm 
+     if(nbasis<nharm){
+             stop("Number of basis must be equal or greater than number of harmonics (nharn)")
+     }
 
      #basis
      if (!(is.character(basis)&& length(basis)==1)){
@@ -67,10 +71,23 @@ SpatFD=function(data,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,vp=NUL
      if (!( is.null(vp)  || (is.numeric(vp)&& length(vp)==1))){
           stop("Wrong class of vp object")
      }
+     
      #add
      if(!(is.null(add) || inherits(add,"SpatFD"))){
           stop("Wrong class of add object")
      }
+     
+     #name
+     if (is.null(name)){
+             name=deparse(substitute(data))
+     }
+     if (!(is.character(name)&& length(name)==1)){
+             stop("Wrong class of name object")
+     } 
+     if(name %in% names(add)){
+             stop("Change name, it already exists.")
+     }
+     
      #----------------------------------------------------------------------------
      #           DEJANDO LISTO PARA FPCA
      #----------------------------------------------------------------------------
@@ -133,10 +150,12 @@ SpatFD=function(data,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,vp=NUL
      }
 
      if(is.null(add)){
-          s=list(list(data=data,coords=coords,coordsnames=cn,fpca=fpca))
+          s=list(list(data=data,coords=coords,coordsnames=cn,fpca=fpca, variable_name= name))
+          names(s)=name
           class(s)="SpatFD"
      }  else if (inherits(add,"SpatFD")){
-          s=list(list(data=data,coords=coords,coordsnames=cn,fpca=fpca))
+          s=list(list(data=data,coords=coords,coordsnames=cn,fpca=fpca, variable_name=name))
+          names(s)=name
           s=append(add,s)
           class(s)="SpatFD"
      }
