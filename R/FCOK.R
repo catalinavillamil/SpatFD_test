@@ -1,5 +1,73 @@
 FCOK=function(SFD,newcoords,model,j=1,fill.all=T){
-     #
+     
+        #----------------------------------------------------------------------------
+        #           VALIDANDO ARGUMENTOS *
+        #----------------------------------------------------------------------------
+        #all
+        if(missing(SFD)){
+                stop("Missing SFD")
+        }
+        if (missing(newcoords)){
+                stop("Missing new coords")
+        }
+        if(missing(model)){
+                stop("Missing model")
+        }
+        #SFD
+        if(!inherits(SFD,"SpatFD")){
+                stop("SFD must be an object SpatFD")
+        }
+        
+        #newcoords
+        if(!(is.matrix(newcoords) || is.data.frame(newcoords))){
+                stop("Wrong class of newcoords object")
+        }else if(!all(apply(newcoords, c(1,2), is.numeric))){
+                stop("Newcoords must be numeric data")
+        }else if(any(is.na(newcoords))){
+                stop("There is some NA value in newcoords")
+        }
+        
+        #model
+        
+        if(!(inherits(model,"variogramModel") || is.list(model))){
+                stop("Wrong class of model, model should be of class variogramModel or a list of them (use vgm of gstat package) ")
+        }
+        if(is.list(model) && !all(lapply(model,inherits,"variogramModel"))){
+                stop("Wrong class of model, each element of list should be of class variogramModel (use vgm of gstat package)")
+        }
+        if(inherits(model,"variogramModel")){}
+        if(inherits(model,"list")){}
+        
+        #vari
+        
+        if(is.null(vari)){
+                vari=1
+        } else if ((is.character(vari)&& length(vari)==1)){
+                if (length(which(names(SFD)==vari))==1){
+                        vari=which(names(SFD)==vari)
+                }else if (length(which(names(SFD)==vari))==0){
+                        stop(paste(vari,"doesn't not exists. Change vari for an existing variable name."))
+                }else if (length(which(names(SFD)==vari))==0){
+                        stop("There are more than one variable with the same name")
+                }
+        }
+        if ((is.null(vari)  || !(is.numeric(vari)&& length(vari)==1))){
+                stop("Wrong class of vari object")
+        }
+        
+        #fill.all
+        if ( !( ( isTRUE(fill.all) || isFALSE(fill.all) ) && length(fill.all)==1 ) ){
+                stop("Wrong class of fill.all object")
+        }
+        
+        # messages default values
+        if(missing(vari)){
+                message("Using first variable by default")
+        }
+        if(missing(fill.all)){
+                message("Using fill.all = TRUE by default")
+        }
+        #
      #agregar sugerencia de vp> 0.5 por componente
      puntaje=list()
      puntajes=list()
