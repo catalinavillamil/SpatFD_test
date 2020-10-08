@@ -47,7 +47,7 @@ FKSK=function(SFD, newcoords,model,vari=NULL,fill.all=NULL){
                 }else if (length(which(names(SFD)==vari))==0){
                         stop(paste(vari,"doesn't not exists. Change vari for an existing variable name."))
                 }else if (length(which(names(SFD)==vari))==0){
-                        stop("There are more than one varible with the same name")
+                        stop("There are more than one variable with the same name")
                 }
         }
         if ((is.null(vari)  || !(is.numeric(vari)&& length(vari)==1))){
