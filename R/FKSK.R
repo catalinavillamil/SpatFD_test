@@ -1,4 +1,4 @@
-FKSK=function(SFD, newcoords,model,j=1,fill.all=NULL){
+FKSK=function(SFD, newcoords,model,vari=NULL,fill.all=NULL){
         #----------------------------------------------------------------------------
         #           VALIDANDO ARGUMENTOS *
         #----------------------------------------------------------------------------
@@ -37,9 +37,21 @@ FKSK=function(SFD, newcoords,model,j=1,fill.all=NULL){
         if(inherits(model,"variogramModel")){}
         if(inherits(model,"list")){}
 
-        #j
-        if ((is.null(j)  || !(is.numeric(j)&& length(j)==1))){
-                stop("Wrong class of j object")
+        #vari
+        
+        if(is.null(vari)){
+                vari=1
+        } else if ((is.character(vari)&& length(vari)==1)){
+                if (length(which(names(SFD)==vari))==1){
+                        vari=which(names(SFD)==vari)
+                }else if (length(which(names(SFD)==vari))==0){
+                        stop(paste(vari,"doesn't not exists. Change vari for an existing variable name."))
+                }else if (length(which(names(SFD)==vari))==0){
+                        stop("There are more than one varible with the same name")
+                }
+        }
+        if ((is.null(vari)  || !(is.numeric(vari)&& length(vari)==1))){
+                stop("Wrong class of vari object")
         }
 
         #fill.all
@@ -48,17 +60,21 @@ FKSK=function(SFD, newcoords,model,j=1,fill.all=NULL){
         }
 
         # messages default values
-        if(missing(j)){
+        if(missing(vari)){
                 message("Using first variable by default")
         }
         if(missing(fill.all)){
                 message("Using fill.all = TRUE by default")
         }
-
-        puntaje=SFD[[j]]$fpca$scores
-        rownames(puntaje)=SFD[[j]]$cn
+        
+        #----------------------------------------------------------------------------
+        #           Kriging
+        #----------------------------------------------------------------------------
+        
+        puntaje=SFD[[vari]]$fpca$scores
+        rownames(puntaje)=SFD[[vari]]$cn
         puntajes=as.data.frame(puntaje)
-        coordinates(puntajes)=SFD[[j]]$coords
+        coordinates(puntajes)=SFD[[vari]]$coords
         if(fill.all==T){
           v=list()
           fv=list()
@@ -104,12 +120,12 @@ FKSK=function(SFD, newcoords,model,j=1,fill.all=NULL){
 
         # plot(x=c(0,1000),y=c(-50,140))
         # for (i in 1:nrow(pred)){
-        #       lines(SFD[[j]][["fpca"]][["meanfd"]]+sum((pred[i,]*SFD[[j]][["fpca"]][["harmonics"]])),col=i)
+        #       lines(SFD[[vari]][["fpca"]][["meanfd"]]+sum((pred[i,]*SFD[[vari]][["fpca"]][["harmonics"]])),col=i)
         # }
 
         fpred=list()
         for( i in 1:nrow(pred)){
-          fpred[[i]]=SFD[[j]][["fpca"]][["meanfd"]]+sum((pred[i,]*SFD[[j]][["fpca"]][["harmonics"]]))
+          fpred[[i]]=SFD[[vari]][["fpca"]][["meanfd"]]+sum((pred[i,]*SFD[[vari]][["fpca"]][["harmonics"]]))
         }
         vari=K[[1]]$var1.var
         if(ncol(puntajes)>1){
@@ -119,13 +135,13 @@ FKSK=function(SFD, newcoords,model,j=1,fill.all=NULL){
         }
         # plot(x=c(0,1000),y=c(-5000,80000))
         # for (i in 1:nrow(vari)){
-        #       lines(SFD[[j]][["fpca"]][["meanfd"]]+sum((vari[i,]*SFD[[j]][["fpca"]][["harmonics"]])),col=i)
+        #       lines(SFD[[vari]][["fpca"]][["meanfd"]]+sum((vari[i,]*SFD[[vari]][["fpca"]][["harmonics"]])),col=i)
         # }
 
 
         fvari=list()
         for( i in 1:nrow(vari)){
-          fvari[[i]]=SFD[[j]][["fpca"]][["meanfd"]]+sum((vari[i,]*SFD[[j]][["fpca"]][["harmonics"]]))
+          fvari[[i]]=SFD[[vari]][["fpca"]][["meanfd"]]+sum((vari[i,]*SFD[[vari]][["fpca"]][["harmonics"]]))
         }
 
         ret=list(SFD=SFD,model=fv,fpred=fpred,fvar=fvari)# hacer cv o no? agregar krigin(K) o no?

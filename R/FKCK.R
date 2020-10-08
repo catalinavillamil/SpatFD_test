@@ -1,10 +1,78 @@
-FKCK=function(SFD,newcoords,model,j=1,fill.all=T){
+FKCK=function(SFD,newcoords,model,vari=1,fill.all=T){
+        #----------------------------------------------------------------------------
+        #           VALIDANDO ARGUMENTOS *
+        #----------------------------------------------------------------------------
+        #all
+        if(missing(SFD)){
+                stop("Missing SFD")
+        }
+        if (missing(newcoords)){
+                stop("Missing new coords")
+        }
+        if(missing(model)){
+                stop("Missing model")
+        }
+        #SFD
+        if(!inherits(SFD,"SpatFD")){
+                stop("SFD must be an object SpatFD")
+        }
+        
+        #newcoords
+        if(!(is.matrix(newcoords) || is.data.frame(newcoords))){
+                stop("Wrong class of newcoords object")
+        }else if(!all(apply(newcoords, c(1,2), is.numeric))){
+                stop("Newcoords must be numeric data")
+        }else if(any(is.na(newcoords))){
+                stop("There is some NA value in newcoords")
+        }
+        
+        #model
+        
+        if(!(inherits(model,"variogramModel") || is.list(model))){
+                stop("Wrong class of model, model should be of class variogramModel or a list of them (use vgm) ")
+        }
+        if(is.list(model) && !all(lapply(model,inherits,"variogramModel"))){
+                stop("Wrong class of model, each element of list should be of class variogramModel")
+        }
+        if(inherits(model,"variogramModel")){}
+        if(inherits(model,"list")){}
+        
+        #vari
+        
+        if(is.null(vari)){
+                vari=1
+        } else if ((is.character(vari)&& length(vari)==1)){
+                if (length(which(names(SFD)==vari))==1){
+                        vari=which(names(SFD)==vari)
+                }else if (length(which(names(SFD)==vari))==0){
+                        stop(paste(vari,"doesn't not exists. Change vari for an existing variable name."))
+                }else if (length(which(names(SFD)==vari))==0){
+                        stop("There are more than one varible with the same name")
+                }
+        }
+        if ((is.null(vari)  || !(is.numeric(vari)&& length(vari)==1))){
+                stop("Wrong class of vari object")
+        }
+        
+        #fill.all
+        if ( !( ( isTRUE(fill.all) || isFALSE(fill.all) ) && length(fill.all)==1 ) ){
+                stop("Wrong class of fill.all object")
+        }
+        
+        # messages default values
+        if(missing(vari)){
+                message("Using first variable by default")
+        }
+        if(missing(fill.all)){
+                message("Using fill.all = TRUE by default")
+        }
+        
      #
      #agregar sugerencia de vp> 0.5 por componente
-     puntaje=SFD[[j]]$fpca$scores
-     rownames(puntaje)=SFD[[j]]$cn
+     puntaje=SFD[[vari]]$fpca$scores
+     rownames(puntaje)=SFD[[vari]]$cn
      puntajes=as.data.frame(puntaje)
-     coordinates(puntajes)=SFD[[j]]$coords
+     coordinates(puntajes)=SFD[[vari]]$coords
 
      #Estimador de la silla: varianza de cada componente (valor propio del comp principal)
      #todos son estacionarios de segundo orden y tienen silla y es exactamente igual al vp de cada comp principal
@@ -13,11 +81,11 @@ FKCK=function(SFD,newcoords,model,j=1,fill.all=T){
      coordinates(newcoords)=~x+y
      #model=vgm(1000,'Gau',11000)
      #  for (i in 2:ncol(puntajes)){
-     #    g=gstat(g,colnames(SFD[[j]][["fpca"]][["harmonics"]][["coefs"]])[i],puntajes[[i]]~1,puntajes)
+     #    g=gstat(g,colnames(SFD[[vari]][["fpca"]][["harmonics"]][["coefs"]])[i],puntajes[[i]]~1,puntajes)
      #  }
      
      ii=1:ncol(puntajes)
-     cc=paste0(c("g=gstat(,colnames(SFD[[j]][[\"fpca\"]][[\"harmonics\"]][[\"coefs\"]])[",rep("g=gstat(g,colnames(SFD[[j]][[\"fpca\"]][[\"harmonics\"]][[\"coefs\"]])[",ncol(puntajes)-1)),ii,rep("],puntajes[[",ncol(puntajes)),ii,rep("]]~1,puntajes)",ncol(puntajes)))
+     cc=paste0(c("g=gstat(,colnames(SFD[[vari]][[\"fpca\"]][[\"harmonics\"]][[\"coefs\"]])[",rep("g=gstat(g,colnames(SFD[[vari]][[\"fpca\"]][[\"harmonics\"]][[\"coefs\"]])[",ncol(puntajes)-1)),ii,rep("],puntajes[[",ncol(puntajes)),ii,rep("]]~1,puntajes)",ncol(puntajes)))
      eval(parse(text=cc))
 
      g <- gstat(g, model=model, fill.all=fill.all)
@@ -46,12 +114,12 @@ FKCK=function(SFD,newcoords,model,j=1,fill.all=T){
 
      # plot(x=c(0,1000),y=c(-50,140))
      # for (i in 1:nrow(pred)){
-     #       lines(SFD[[j]][["fpca"]][["meanfd"]]+sum((pred[i,]*SFD[[j]][["fpca"]][["harmonics"]])),col=i)
+     #       lines(SFD[[vari]][["fpca"]][["meanfd"]]+sum((pred[i,]*SFD[[vari]][["fpca"]][["harmonics"]])),col=i)
      # }
 
      fpred=list()
      for( i in 1:nrow(pred)){
-          fpred[[i]]=SFD[[j]][["fpca"]][["meanfd"]]+sum((pred[i,]*SFD[[j]][["fpca"]][["harmonics"]]))
+          fpred[[i]]=SFD[[vari]][["fpca"]][["meanfd"]]+sum((pred[i,]*SFD[[vari]][["fpca"]][["harmonics"]]))
      }
      vari=z[2][[1]]
      if(ncol(puntajes)>1){
@@ -61,13 +129,13 @@ FKCK=function(SFD,newcoords,model,j=1,fill.all=T){
      }
      # plot(x=c(0,1000),y=c(-5000,80000))
      # for (i in 1:nrow(vari)){
-     #       lines(SFD[[j]][["fpca"]][["meanfd"]]+sum((vari[i,]*SFD[[j]][["fpca"]][["harmonics"]])),col=i)
+     #       lines(SFD[[vari]][["fpca"]][["meanfd"]]+sum((vari[i,]*SFD[[vari]][["fpca"]][["harmonics"]])),col=i)
      # }
 
 
      fvari=list()
      for( i in 1:nrow(vari)){
-          fvari[[i]]=SFD[[j]][["fpca"]][["meanfd"]]+sum((vari[i,]*SFD[[j]][["fpca"]][["harmonics"]]))
+          fvari[[i]]=SFD[[vari]][["fpca"]][["meanfd"]]+sum((vari[i,]*SFD[[vari]][["fpca"]][["harmonics"]]))
      }
 
      ret=list(SFD=SFD,model=mcl,fpred=fpred,fvar=fvari)
