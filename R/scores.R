@@ -6,7 +6,7 @@ scores=function(SFD){
 
 
      puntaje[[j]]=SFD[[j]]$fpca$scores
-     rownames(puntaje[[j]])=SFD[[j]]$cn
+     rownames(puntaje[[j]])=SFD[[j]]$coordsnames
      puntajes[[j]]=as.data.frame(puntaje[[j]])
      }
      return(puntajes)

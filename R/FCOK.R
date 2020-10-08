@@ -1,4 +1,4 @@
-FCOK=function(SFD,newcoords,model,j=1,fill.all=T){
+FCOK=function(SFD,newcoords,model,vari=NULL,fill.all=T){
      
         #----------------------------------------------------------------------------
         #           VALIDANDO ARGUMENTOS *
@@ -27,16 +27,13 @@ FCOK=function(SFD,newcoords,model,j=1,fill.all=T){
                 stop("There is some NA value in newcoords")
         }
         
-        #model
-        
-        if(!(inherits(model,"variogramModel") || is.list(model))){
-                stop("Wrong class of model, model should be of class variogramModel or a list of them (use vgm of gstat package) ")
+        # messages default values
+        if(missing(vari)){
+                message("Using first variable by default")
         }
-        if(is.list(model) && !all(lapply(model,inherits,"variogramModel"))){
-                stop("Wrong class of model, each element of list should be of class variogramModel (use vgm of gstat package)")
+        if(missing(fill.all)){
+                message("Using fill.all = TRUE by default")
         }
-        if(inherits(model,"variogramModel")){}
-        if(inherits(model,"list")){}
         
         #vari
         
@@ -60,20 +57,27 @@ FCOK=function(SFD,newcoords,model,j=1,fill.all=T){
                 stop("Wrong class of fill.all object")
         }
         
-        # messages default values
-        if(missing(vari)){
-                message("Using first variable by default")
-        }
-        if(missing(fill.all)){
-                message("Using fill.all = TRUE by default")
-        }
-        #
+        
+        #model
+        
+        if(!(inherits(model,"variogramModel") || inherits(model,"list"))){
+                stop("Wrong class of model, model should be of class variogramModel or a list of them (use vgm of gstat package) ")
+        }else if(inherits(model,"list") && !all(lapply(model,inherits,"variogramModel"))){
+                stop("Wrong class of model, each element of list should be of class variogramModel (use vgm of gstat package)")
+        }#else if(inherits(model,"list") && (length(model)!=ncol(as.data.frame(SFD[[vari]]$fpca$scores)))){
+         #       stop("length of list of models must be equal to number of harmonics of the choosen variable ")
+        #}else if(inherits(model,"variogramModel") && !(fill.all || (ncol(as.data.frame(SFD[[vari]]$fpca$scores))==1))){
+        #        stop("If model is not a list and there are more than one nharm of that variable, then fill.all must be TRUE or you can create a list of models with the same number of harmonics")
+        #}
+        
+        
+        
      #agregar sugerencia de vp> 0.5 por componente
      puntaje=list()
      puntajes=list()
      for(k in 1:length(SFD)){
           puntaje[[k]]=SFD[[k]]$fpca$scores
-          rownames(puntaje[[k]])=SFD[[k]]$cn
+          rownames(puntaje[[k]])=SFD[[k]]$coordsname
           puntajes[[k]]=as.data.frame(puntaje[[k]])
           coordinates(puntajes[[k]])=SFD[[k]]$coords
      }
@@ -124,35 +128,35 @@ FCOK=function(SFD,newcoords,model,j=1,fill.all=T){
           grid.arrange(spplot(z[2*i-1], main = "ordinary kriging predictions"),spplot(z[2*i], main = "ordinary kriging variance"))  }
      #falta meter los datos predichos
      pred=z[1][[1]]
-     vari=z[2][[1]]
+     #vari=z[2][[1]]
      if(p>1){
           for (k in 2:p){
                pred=cbind(pred,z[2*k-1][[1]])
-               vari=cbind(vari,z[2*k][[1]])
+               #vari=cbind(vari,z[2*k][[1]])
           }
      }
 
 
      # plot(x=c(0,1000),y=c(-50,140))
      # for (i in 1:nrow(pred)){
-     #       lines(SFD[[j]][["fpca"]][["meanfd"]]+sum((pred[i,]*SFD[[j]][["fpca"]][["harmonics"]])),col=i)
+     #       lines(SFD[[vari]][["fpca"]][["meanfd"]]+sum((pred[i,]*SFD[[vari]][["fpca"]][["harmonics"]])),col=i)
      # }
-     if(j==1){
+     if(vari==1){
           fpred=list()
-          fvari=list()
+          #fvari=list()
           for( i in 1:nrow(pred)){
-               fpred[[i]]=SFD[[j]][["fpca"]][["meanfd"]]+sum((pred[i,1:ncol(puntajes[[j]])]*SFD[[j]][["fpca"]][["harmonics"]]))
-               fvari[[i]]=SFD[[j]][["fpca"]][["meanfd"]]+sum((vari[i,1:ncol(puntajes[[j]])]*SFD[[j]][["fpca"]][["harmonics"]]))
+               fpred[[i]]=SFD[[vari]][["fpca"]][["meanfd"]]+sum((pred[i,1:ncol(puntajes[[vari]])]*SFD[[vari]][["fpca"]][["harmonics"]]))
+               #fvari[[i]]=SFD[[vari]][["fpca"]][["meanfd"]]+sum((vari[i,1:ncol(puntajes[[vari]])]*SFD[[vari]][["fpca"]][["harmonics"]]))
 
           }
      }else{r=0
-     for( i in 1:(j-1)){
+     for( i in 1:(vari-1)){
           r=r+ncol(puntajes[[i]])
      }
      fpred=list()
      for( i in 1:nrow(pred)){
-          fpred[[i]]=SFD[[j]][["fpca"]][["meanfd"]]+sum((pred[i,r:r+ncol(puntajes[[j]])]*SFD[[j]][["fpca"]][["harmonics"]]))
-          fvari[[i]]=SFD[[j]][["fpca"]][["meanfd"]]+sum((vari[i,r:r+ncol(puntajes[[j]])]*SFD[[j]][["fpca"]][["harmonics"]]))
+          fpred[[i]]=SFD[[vari]][["fpca"]][["meanfd"]]+sum((pred[i,r:r+ncol(puntajes[[vari]])]*SFD[[vari]][["fpca"]][["harmonics"]]))
+          #fvari[[i]]=SFD[[vari]][["fpca"]][["meanfd"]]+sum((vari[i,r:r+ncol(puntajes[[vari]])]*SFD[[vari]][["fpca"]][["harmonics"]]))
 
      }
 
@@ -161,11 +165,11 @@ FCOK=function(SFD,newcoords,model,j=1,fill.all=T){
 
      # plot(x=c(0,1000),y=c(-5000,80000))
      # for (i in 1:nrow(vari)){
-     #       lines(SFD[[j]][["fpca"]][["meanfd"]]+sum((vari[i,]*SFD[[j]][["fpca"]][["harmonics"]])),col=i)
+     #       lines(SFD[[vari]][["fpca"]][["meanfd"]]+sum((vari[i,]*SFD[[vari]][["fpca"]][["harmonics"]])),col=i)
      # }
 
 
-     ret=list(SFD=SFD,model=mcl,fpred=fpred,fvar=fvari)
+     ret=list(SFD=SFD,model=mcl,fpred=fpred)
      # hacer cv o no? agregar krigin(K) o no?
      class(ret)='FCOK'
      return(ret)

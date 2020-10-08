@@ -26,16 +26,13 @@ FKSK=function(SFD, newcoords,model,vari=NULL,fill.all=NULL){
                 stop("There is some NA value in newcoords")
         }
 
-        #model
-
-        if(!(inherits(model,"variogramModel") || is.list(model))){
-                stop("Wrong class of model, model should be of class variogramModel or a list of them (use vgm) ")
+        # messages default values
+        if(missing(vari)){
+                message("Using first variable by default")
         }
-        if(is.list(model) && !all(lapply(model,inherits,"variogramModel"))){
-                stop("Wrong class of model, each element of list should be of class variogramModel")
+        if(missing(fill.all)){
+                message("Using fill.all = TRUE by default")
         }
-        if(inherits(model,"variogramModel")){}
-        if(inherits(model,"list")){}
 
         #vari
         
@@ -53,26 +50,33 @@ FKSK=function(SFD, newcoords,model,vari=NULL,fill.all=NULL){
         if ((is.null(vari)  || !(is.numeric(vari)&& length(vari)==1))){
                 stop("Wrong class of vari object")
         }
-
+        
         #fill.all
         if ( !( ( isTRUE(fill.all) || isFALSE(fill.all) ) && length(fill.all)==1 ) ){
                 stop("Wrong class of fill.all object")
         }
+        
+        
+        #model
+        
+        if(!(inherits(model,"variogramModel") || inherits(model,"list"))){
+                stop("Wrong class of model, model should be of class variogramModel or a list of them (use vgm of gstat package) ")
+        }else if(inherits(model,"list") && !all(lapply(model,inherits,"variogramModel"))){
+                stop("Wrong class of model, each element of list should be of class variogramModel (use vgm of gstat package)")
+        }else if(inherits(model,"list") && (length(model)!=ncol(as.data.frame(SFD[[vari]]$fpca$scores)))){
+                stop("length of list of models must be equal to number of harmonics of the choosen variable ")
+        }else if(inherits(model,"variogramModel") && !(fill.all || (ncol(as.data.frame(SFD[[vari]]$fpca$scores))==1))){
+                stop("If model is not a list and there are more than one nharm of that variable, then fill.all must be TRUE or you can create a list of models with the same number of harmonics")
+        }
+        
 
-        # messages default values
-        if(missing(vari)){
-                message("Using first variable by default")
-        }
-        if(missing(fill.all)){
-                message("Using fill.all = TRUE by default")
-        }
         
         #----------------------------------------------------------------------------
         #           Kriging
         #----------------------------------------------------------------------------
         
         puntaje=SFD[[vari]]$fpca$scores
-        rownames(puntaje)=SFD[[vari]]$cn
+        rownames(puntaje)=SFD[[vari]]$coordsnames
         puntajes=as.data.frame(puntaje)
         coordinates(puntajes)=SFD[[vari]]$coords
         if(fill.all==T){
@@ -127,24 +131,24 @@ FKSK=function(SFD, newcoords,model,vari=NULL,fill.all=NULL){
         for( i in 1:nrow(pred)){
           fpred[[i]]=SFD[[vari]][["fpca"]][["meanfd"]]+sum((pred[i,]*SFD[[vari]][["fpca"]][["harmonics"]]))
         }
-        vari=K[[1]]$var1.var
-        if(ncol(puntajes)>1){
-          for (i in 2:ncol(puntajes)){
-               vari=cbind(vari,K[[i]]$var1.vari)
-          }
-        }
+        # vari=K[[1]]$var1.var
+        # if(ncol(puntajes)>1){
+        #   for (i in 2:ncol(puntajes)){
+        #        vari=cbind(vari,K[[i]]$var1.vari)
+        #   }
+        # }
         # plot(x=c(0,1000),y=c(-5000,80000))
         # for (i in 1:nrow(vari)){
         #       lines(SFD[[vari]][["fpca"]][["meanfd"]]+sum((vari[i,]*SFD[[vari]][["fpca"]][["harmonics"]])),col=i)
         # }
 
 
-        fvari=list()
-        for( i in 1:nrow(vari)){
-          fvari[[i]]=SFD[[vari]][["fpca"]][["meanfd"]]+sum((vari[i,]*SFD[[vari]][["fpca"]][["harmonics"]]))
-        }
+        # fvari=list()
+        # for( i in 1:nrow(vari)){
+        #   fvari[[i]]=SFD[[vari]][["fpca"]][["meanfd"]]+sum((vari[i,]*SFD[[vari]][["fpca"]][["harmonics"]]))
+        # }
 
-        ret=list(SFD=SFD,model=fv,fpred=fpred,fvar=fvari)# hacer cv o no? agregar krigin(K) o no?
+        ret=list(SFD=SFD,model=fv,fpred=fpred)# hacer cv o no? agregar krigin(K) o no?
         class(ret)='FKSK'
         return(ret)
 

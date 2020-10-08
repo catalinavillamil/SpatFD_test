@@ -97,8 +97,8 @@ model=vgm(1000,'Gau',10000)
 
 SFD=ds
 newcoords=datos[,1:2]
-
-fk=FKSK(ds,newcoords,model)
+newcoords=coordenadas
+fk=FKSK(ds,coordenadas2,model,fill.all = TRUE)
 fc=FKCK(ds,newcoords,model)
 cok=FCOK(ds,newcoords,model)
 
