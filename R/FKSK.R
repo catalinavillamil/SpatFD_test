@@ -52,7 +52,9 @@ FKSK=function(SFD, newcoords,model,vari=NULL,fill.all=NULL){
         }
         
         #fill.all
-        if ( !( ( isTRUE(fill.all) || isFALSE(fill.all) ) && length(fill.all)==1 ) ){
+        if(is.null(fill.all)){
+                fill.all=TRUE
+        }else if ( !( ( isTRUE(fill.all) || isFALSE(fill.all) ) && length(fill.all)==1 ) ){
                 stop("Wrong class of fill.all object")
         }
         

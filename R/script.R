@@ -5,6 +5,8 @@
 library(tidyr)
 library(data.table)
 library(tidyverse)
+library(tibble)
+
 #------------------------------------------------------------------------
 #            PAQUETES NECESARIOS (Paquete)
 #------------------------------------------------------------------------
@@ -68,13 +70,13 @@ namedi=function(X){
 # coordenadas2=datos[c(1,3,10,11,12,16,17,24,27,30,34,32,39,42,43),c(1,2)]
 # coordenadas2=coordenadas2[c(1,2,4,6,7,8,11,13,14,15),]
 
-MPM1017=fread("/home/usuario/Documentos/GitHub/SpatFD/data/MPM1017.csv") %>% 
+MPM1017=fread("data/MPM1017.csv") %>% 
      column_to_rownames(var="V1")
-MNO217=fread("/home/usuario/Documentos/GitHub/SpatFD/data/MNO217.csv")%>% 
+MNO217=fread("data/MNO217.csv")%>% 
      column_to_rownames(var="V1")
-coordenadas=fread("/home/usuario/Documentos/GitHub/SpatFD/data/coordenadas.csv")%>% 
+coordenadas=fread("data/coordenadas.csv")%>% 
      column_to_rownames(var="V1")
-coordenadas2=fread("/home/usuario/Documentos/GitHub/SpatFD/data/coordenadas2.csv")%>% 
+coordenadas2=fread("data/coordenadas2.csv")%>% 
      column_to_rownames(var="V1")
 # datos=read.table("C:/Users/Catalina Villamil/Downloads/Mexico/Mexico/coordenadasmexico.txt",head=T,dec=",",row.names=1)
 
@@ -97,7 +99,7 @@ model=vgm(1000,'Gau',10000)
 
 SFD=ds
 newcoords=datos[,1:2]
-newcoords=coordenadas
+newcoords=coordenadas2
 fk=FKSK(ds,coordenadas2,model,fill.all = TRUE)
 fc=FKCK(ds,newcoords,model)
 cok=FCOK(ds,newcoords,model)
